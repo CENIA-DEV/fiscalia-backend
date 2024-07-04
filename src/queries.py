@@ -28,14 +28,14 @@ class OracleDB:
         return queries
 
     def get_rucs(self):
-        query = self.queries["get_rucs"]
+        query = self.queries["saf_db"]["get_rucs"]
         df = pd.read_sql(query, self.conn)
 
         return df["RUC"].unique().tolist()
 
     def get_ruc_info(self, rucs_list):
         rucs = ", ".join(f"'{ruc}'" for ruc in rucs_list)
-        query_relato = self.queries["query_info"][0]["query"].replace(
+        query_relato = self.queries["saf_db"]["query_info"][0]["query"].replace(
             "{RUCS_VALUE}", rucs
         )
         df = pd.read_sql(query_relato, self.conn)
@@ -47,7 +47,9 @@ class OracleDB:
             .tolist()
         )
 
-        query_cod = self.queries["query_info"][1]["query"].replace("{RUCS_VALUE}", rucs)
+        query_cod = self.queries["saf_db"]["query_info"][1]["query"].replace(
+            "{RUCS_VALUE}", rucs
+        )
         codigos = pd.read_sql(query_cod, self.conn)["COD_DELITO"].tolist()
 
         dicc = {
