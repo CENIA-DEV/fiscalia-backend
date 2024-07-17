@@ -29,6 +29,16 @@ class PostgresDB:
 
         return queries
 
+    def get_rucs(self):
+        query = self.queries["postgres_db"]["get_rucs"]
+        self.cursor.execute(query)
+        results = self.cursor.fetchall()
+        results = list(map(lambda x: x[0], results))
+
+        dicc = {"rucs_list": results}
+
+        return dicc
+
     def get_user_info(self, user):
         query = self.queries["postgres_db"]["get_user_info"].replace("{USER}", user)
         self.cursor.execute(query)
