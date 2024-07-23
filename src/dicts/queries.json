@@ -9,15 +9,20 @@
             {
                 "name": "get_codigo_delito",
                 "query": " SELECT COD_DELITO FROM minprod.safest_relaciones WHERE FISCALIA = 'REG. M. CENTRO NORTE' AND RUC IN ({RUCS_VALUE}) AND rownum < 10000"
+            },
+            {
+                "name": "get_fecha",
+                "query": "SELECT FEC_CAPTURA FROM minprod.safest_relaciones WHERE FISCALIA = 'REG. M. CENTRO NORTE' AND RUC IN ({RUCS_VALUE}) AND rownum < 10000"
             }
         ]
     },
     "postgres_db": {
         "get_user_info": "SELECT full_name, password, fiscalia FROM users WHERE username = '{USER}';",
         "get_ruc_info": "SELECT * FROM causas WHERE ruc in %s;",
-        "insert_ruc": "INSERT INTO causas (ruc, relato, codigo_delito, sug_curso, sug_precla, curso_accion, precla, comentarios) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);",
+        "insert_ruc": "INSERT INTO causas (ruc, relato, codigo_delito, sug_curso, sug_precla, curso_accion, precla, comentarios, estado, grupo_delito, fecha) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",
         "delete_rucs": "DELETE FROM causas WHERE ruc in %s;",
         "update_ruc": "UPDATE causas SET {VALUES} WHERE ruc = '{RUC}';",
-        "get_rucs": "SELECT ruc FROM causas;"
+        "get_rucs": "SELECT ruc FROM causas WHERE estado <> 'Preclasificado';",
+        "get_classified_rucs": "SELECT ruc FROM causas WHERE estado = 'Preclasificado';"
     }
 }

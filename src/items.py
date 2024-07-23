@@ -11,14 +11,6 @@ class RucRequest(BaseModel):
     rucs_list: List[str]
 
 
-class RucCreateRequest(BaseModel):
-    dicc_causa: Dict[str, Any]
-
-
 class RucUpdateRequest(BaseModel):
     ruc: str
     update_dicc: Dict[str, Any]
-
-
-class DeleteRequest(BaseModel):
-    rucs_list: List[str]

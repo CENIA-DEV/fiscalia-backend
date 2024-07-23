@@ -8,7 +8,7 @@ load_dotenv()
 
 
 class PostgresDB:
-    def __init__(self, queries_path="queries.json"):
+    def __init__(self, queries_path="dicts/queries.json"):
         for attr in ["psql_host", "psql_db", "psql_user", "psql_password"]:
             setattr(self, attr, os.environ[attr])
 
@@ -21,9 +21,9 @@ class PostgresDB:
 
         self.cursor = self.conn.cursor()
 
-        self.queries = self.load_queries(queries_path)
+        self.queries = self.load_dicts(queries_path)
 
-    def load_queries(self, queries_path):
+    def load_dicts(self, queries_path):
         with open(queries_path, "r") as json_file:
             queries = json.load(json_file)
 
@@ -31,6 +31,16 @@ class PostgresDB:
 
     def get_rucs(self):
         query = self.queries["postgres_db"]["get_rucs"]
+        self.cursor.execute(query)
+        results = self.cursor.fetchall()
+        results = list(map(lambda x: x[0], results))
+
+        dicc = {"rucs_list": results}
+
+        return dicc
+
+    def get_classified_rucs(self):
+        query = self.queries["postgres_db"]["get_classified_rucs"]
         self.cursor.execute(query)
         results = self.cursor.fetchall()
         results = list(map(lambda x: x[0], results))
@@ -69,6 +79,9 @@ class PostgresDB:
                 "curso_accion": causa[5],
                 "precla": causa[6],
                 "comentarios": causa[7],
+                "estado": causa[8],
+                "grupo_delito": causa[9],
+                "fecha": causa[10],
             }
 
         return dicc
