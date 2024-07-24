@@ -20,8 +20,19 @@ class PostgresDB:
         )
 
         self.cursor = self.conn.cursor()
-
         self.queries = self.load_dicts(queries_path)
+        self.keys = [
+            "relato",
+            "codigo_delito",
+            "sug_curso",
+            "sug_precla",
+            "curso_accion",
+            "precla",
+            "comentarios",
+            "estado",
+            "grupo_delito",
+            "fecha",
+        ]
 
     def load_dicts(self, queries_path):
         with open(queries_path, "r") as json_file:
@@ -68,23 +79,7 @@ class PostgresDB:
         self.cursor.execute(query, (ruc_tuple,))
         results = self.cursor.fetchall()
 
-        dicc = {}
-
-        for causa in results:
-            dicc[causa[0]] = {
-                "relato": causa[1],
-                "codigo_delito": causa[2],
-                "sug_curso": causa[3],
-                "sug_precla": causa[4],
-                "curso_accion": causa[5],
-                "precla": causa[6],
-                "comentarios": causa[7],
-                "estado": causa[8],
-                "grupo_delito": causa[9],
-                "fecha": causa[10],
-            }
-
-        return dicc
+        return {causa[0]: dict(zip(self.keys, causa[1:])) for causa in results}
 
     def create_ruc(self, dicc_causa):
         query = self.queries["postgres_db"]["insert_ruc"]
@@ -134,3 +129,14 @@ class PostgresDB:
             self.conn.rollback()
 
             return {"success": False, "message": e}
+
+    def search_rucs(self, search_dicc):
+        query = self.queries["postgres_db"]["search_rucs"]
+
+        for key in search_dicc.keys():
+            query += f" AND {key} = '{search_dicc[key]}'"
+
+        self.cursor.execute(query)
+        results = self.cursor.fetchall()
+
+        return {causa[0]: dict(zip(self.keys, causa[1:])) for causa in results}

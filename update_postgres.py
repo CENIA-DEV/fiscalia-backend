@@ -1,7 +1,9 @@
+import os
+
 from src.postgres import PostgresDB
 from src.queries import OracleDB
 
-BASE_PATH = "src/dicts/"
+BASE_PATH = f"{os.getcwd()}/fiscalia-backend/src/dicts/"
 
 
 def update_rucs(oracle, postgres):

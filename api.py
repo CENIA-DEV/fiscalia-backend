@@ -1,6 +1,8 @@
+import json
+
 from fastapi import FastAPI, HTTPException
 
-from src.items import RucRequest, RucUpdateRequest
+from src.items import RucRequest, RucSearchRequest, RucUpdateRequest
 from src.postgres import PostgresDB
 
 app = FastAPI()
@@ -14,6 +16,53 @@ def get_rucs():
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/get_estados/")
+def get_estados():
+    return {"estados": ["Sin preclasificar", "Guardado", "Preclasificado"]}
+
+
+@app.get("/get_grupo_delitos/")
+def get_grupo_delitos():
+    with open("src/dicts/agrupador.json", "r") as file:
+        data = json.load(file)
+
+    agrupadores = []
+
+    for codigo in data.keys():
+        agrupador = data[codigo]["agrupador"]
+        agrupadores.append(agrupador)
+
+    agrupadores = list(set(agrupadores))
+
+    return {"grupos_delitos": agrupadores}
+
+
+@app.get("/get_curso_precla/")
+def get_curso_precla():
+    with open("src/dicts/preclasificacion.json", "r") as file:
+        data = json.load(file)
+
+    return data
+
+
+@app.get("/get_causas/")
+def get_causas():
+    try:
+        rucs_list = db.get_rucs()["rucs_list"]
+        result = db.get_ruc_info(rucs_list)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/search_rucs/")
+def search_rucs(request: RucSearchRequest):
+    provided_fields = request.model_dump(exclude_unset=True)
+    search_results = db.search_rucs(provided_fields)
+
+    return search_results
 
 
 @app.post("/get_ruc_info/")

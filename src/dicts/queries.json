@@ -23,6 +23,7 @@
         "delete_rucs": "DELETE FROM causas WHERE ruc in %s;",
         "update_ruc": "UPDATE causas SET {VALUES} WHERE ruc = '{RUC}';",
         "get_rucs": "SELECT ruc FROM causas WHERE estado <> 'Preclasificado';",
-        "get_classified_rucs": "SELECT ruc FROM causas WHERE estado = 'Preclasificado';"
+        "get_classified_rucs": "SELECT ruc FROM causas WHERE estado = 'Preclasificado';",
+        "search_rucs": "SELECT * FROM causas WHERE 1=1"
     }
 }
