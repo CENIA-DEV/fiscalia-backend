@@ -1,0 +1,6 @@
+{
+    "preclasificacion": [
+        "Agrupar", "Archivo Provisional", "Decisión Jurídica", "Equipo Jurídico", "Facultad de no inicio", "Monitorio", "Principio de Oportunidad", "Transferencia (asignar)", "Urgente", "VIF", "Instrucciones", "Transferencia", "Anular RUC", "Hallazgo vehículo"
+    ],
+    "curso_accion": ["Investiga", "Desestima", "Transferencia"]
+}
